@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { addHours, differenceInSeconds } from "date-fns";
 import Swal from "sweetalert2";
 import 'sweetalert2/dist/sweetalert2.css'
@@ -11,7 +11,7 @@ registerLocale('es', es)
 
 import Modal from "react-modal";
 
-import { useUiStore } from "../../hooks";
+import { useCalendarStore, useUiStore } from "../../hooks";
 
 const customStyles = {
 	content: {
@@ -29,6 +29,7 @@ Modal.setAppElement("#root");
 export const CalendarModal = () => {
 
     const { isDateModalOpen, closeDateModal } = useUiStore();
+    const { activeEvent } = useCalendarStore();
 
     const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -44,7 +45,15 @@ export const CalendarModal = () => {
         return ( formValues.title.length > 0)
             ? ''
             : 'is-invalid'
-    }, [ formValues.title, formSubmitted ])
+    }, [ formValues.title, formSubmitted ]);
+
+    useEffect(() => {
+        if( activeEvent !== null ){
+            setFormValues({ ...activeEvent })
+        }
+    
+    }, [ activeEvent ])
+    
 
     const onInputChange = ({ target }) => {
         setFormValues({
