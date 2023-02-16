@@ -11,6 +11,7 @@ registerLocale('es', es)
 
 import Modal from "react-modal";
 
+import { useUiStore } from "../../hooks";
 
 const customStyles = {
 	content: {
@@ -26,12 +27,10 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 export const CalendarModal = () => {
-	const [isOpen, setisOpen] = useState(true);
-    const [formSubmitted, setFormSubmitted] = useState(false);
 
-	const onCloseModal = () => {
-		setisOpen(false);
-	};
+    const { isDateModalOpen, closeDateModal } = useUiStore();
+
+    const [formSubmitted, setFormSubmitted] = useState(false);
 
     const [formValues, setFormValues] = useState({
         title: '',
@@ -81,8 +80,8 @@ export const CalendarModal = () => {
 	return (
         
 		<Modal
-			isOpen={isOpen}
-			onRequestClose={onCloseModal}
+			isOpen={isDateModalOpen}
+			onRequestClose={closeDateModal}
 			style={customStyles}
 			className="modal"
 			overlayClassName="modal-fondo"
