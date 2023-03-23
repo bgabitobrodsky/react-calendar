@@ -4,15 +4,15 @@ import { useAuthStore, useForm } from "../../hooks";
 import "./LoginPage.css";
 
 const loginFormFields = {
-    loginEmail: '',
-    loginPassword: '',
+    loginEmail:     '',
+    loginPassword:  '',
 }
 
 const registerFormFields = {
-    registerEmail: '',
-    registerName: '',
-    registerPassword: '',
-    registerPassword2: '',
+    registerEmail:      '',
+    registerName:       '',
+    registerPassword:   '',
+    registerPassword2:  '',
 }
 
 export const LoginPage = () => {
@@ -20,7 +20,7 @@ export const LoginPage = () => {
     const { loginEmail, loginPassword, onInputChange: onLoginInputChange } = useForm( loginFormFields );
     const { registerEmail, registerName, registerPassword, registerPassword2, onInputChange: onRegisterInputChange } = useForm( registerFormFields );
 
-    const { errorMessage, startLogin } = useAuthStore();
+    const { errorMessage, startLogin, startRegister } = useAuthStore();
 
     const loginSubmit = ( event ) => {
         event.preventDefault();
@@ -30,7 +30,13 @@ export const LoginPage = () => {
 
     const registerSubmit = ( event ) => {
         event.preventDefault();
-        
+        if( registerPassword !== registerPassword2 ){
+            Swal.fire('Error en registro', 'Las contraseñas no coinciden', 'error');
+            return;
+        }
+
+        startRegister({ name: registerName, email: registerEmail, password: registerPassword })
+
     }
 
     useEffect(() => {
@@ -79,7 +85,7 @@ export const LoginPage = () => {
 
 				<div className="col-md-6 login-form-2">
 					<h3>Registro</h3>
-					<form>
+					<form onSubmit={registerSubmit}>
 						<div className="form-group mb-2">
 							<input
 								type="text"
